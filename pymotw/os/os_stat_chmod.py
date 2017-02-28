@@ -22,7 +22,7 @@ def main():
         # use XOR to remove the user execute permission
         new_permissions = existing_permissions ^ stat.S_IXUSR
     
-    os.chmod(filenam, new_permissions)
+    os.chmod(filename, new_permissions)
 
 if __name__ == '__main__':
     main()
