@@ -26,3 +26,13 @@ with tf.Session() as session:
         if i%128 == 0:
             print(nearest_indices)
             plot_to_nearest(sample_values, updated_centroid_value, nearest_indices)
+
+# Code to run iteratively, but not display original distribution below
+# Also doesn't change the color of the dots to closest centroid
+# model = tf.global_variables_initializer()
+# with tf.Session() as session:
+#     sample_values = session.run(samples)
+#     for i in range(1024):
+#        updated_centroid_value = session.run(updated_centroids)
+#        if i%64 == 0:
+#            plot_clusters(sample_values, updated_centroid_value, n_samples_per_cluster)
