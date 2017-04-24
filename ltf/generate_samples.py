@@ -20,7 +20,9 @@ updated_centroids = update_centroids(samples, nearest_indices, n_clusters)
 model = tf.global_variables_initializer()
 with tf.Session() as session:
     sample_values = session.run(samples)
-    updated_centroid_value = session.run(updated_centroids)
-    print(updated_centroid_value)
-
-plot_clusters(sample_values, updated_centroid_value, n_samples_per_cluster)
+    #plot_clusters(sample_values, initial_centroids, n_samples_per_cluster)
+    for i in range(1024):
+        updated_centroid_value = session.run(updated_centroids)
+        if i%128 == 0:
+            print(nearest_indices)
+            plot_to_nearest(sample_values, updated_centroid_value, nearest_indices)
