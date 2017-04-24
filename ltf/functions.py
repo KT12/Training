@@ -49,7 +49,7 @@ def choose_random_centroids(samples, n_clusters):
 def assign_to_nearest(samples, centroids):
     expanded_vectors = tf.expand_dims(samples, 0)
     expanded_centroids = tf.expand_dims(centroids, 1)
-    distances = tf.reduce_sum(tf.square(tf.sub(expanded_vectors, expanded_centroids)), 2)
+    distances = tf.reduce_sum(tf.square(tf.subtract(expanded_vectors, expanded_centroids)), 2)
     mins = tf.argmin(distances, 0)
 
     nearest_indices = mins
