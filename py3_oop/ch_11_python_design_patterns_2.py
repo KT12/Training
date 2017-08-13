@@ -52,3 +52,235 @@ a = AgeCalculator(bd)
 a.calculate_age(today)
 
 # Facade pattern
+
+import smtplib
+import imaplib
+
+class EmailFacade:
+    def __init__(self, host, username, pasword):
+        self.host = host
+        self.username = username
+        self.password = pasword
+    
+    def send_email(self, to_email, subject, message):
+        if not "@" in self.username:
+            from_email = "{0}@{1}".format(self.username, self.host)
+        else:
+            from_email = self.username
+        
+        message = ("From: {0}\r\n"
+                   "To: {1}\r\n"
+                   "Subject: {2}\r\n\r\n{3}").format(
+                           from_email,
+                           to_email,
+                           subject,
+                           message)
+        
+        smtp = smtplib.SMTP(self.host)
+        smtp.login(self.username, self.password)
+        smtp.sendmail(from_email, [to_email], message)
+    
+    def get_inbox(self):
+        mailbox = imaplib.IMAP4(self.host)
+        mailbox.login(bytes(self.username, 'utf8'),
+                      bytes(self.password, 'utf8'))
+        mailbox.select()
+        x, data = mailbox.search(None, "ALL")
+        messages = []
+        for num in data[0].split():
+            x, message = mailbox.fetch(num, '(RFC822)')
+            messages.append(message[0][1])
+        return messages
+
+# Flyweight Pattern
+# for memory optimization
+
+import weakref
+
+class CarModel:
+    _models = weakref.WeakValueDictionary()
+    
+    def __new__(cls, model_name, *args, **kwargs):
+        model = cls._models.get(model_name)
+        if not model:
+            model = super().__new__(cls)
+            cls._models[model_name] = model
+        
+        return model
+    
+    def __init__(self, model_name, air=False, tilt=False,
+                 cruise_control=False, power_locks=False,
+                 alloy_wheels=False, usb_charger=False):
+        if not hasattr(self, 'initted'):
+            self.model_name = model_name
+            self.air = air
+            self.tilt = tilt
+            self.cruise_control = cruise_control
+            self.power_locks = power_locks
+            self.alloy_wheels = alloy_wheels
+            self.usb_charger = usb_charger
+            self.initted = True
+    
+    def check_serial(self, serial_number):
+        print("Sorry, we are unable to check "
+              "the serial number {0} on the {1} "
+              "at this time.".format(
+                      serial_number, self.model_name))
+
+class Car:
+    def __init__(self, model, color, serial):
+        self.model = model
+        self.color = color
+        self.serial = serial
+    
+    def check_serial(self):
+        return self.model.check_serial(self.serial)
+
+dx = CarModel('FIT DX')
+lx = CarModel("FIT LX", air=True, cruise_control=True,
+              power_locks=True, tilt=True)
+
+car1 = Car(dx, 'blue', '12345')
+car2 = Car(dx, 'black', '12346')
+car3 = Car(lx, 'red', '12347')
+
+# Check out weak refs at work
+id(lx)
+del lx
+del car3
+import gc
+gc.collect()
+# Should return 0
+
+lx = CarModel('FIT LX', air=True, cruise_control=True,
+              power_locks=True, tilt=True)
+id(lx)
+lx = CarModel('FIT LX')
+id(lx)
+lx.air
+
+# Command Pattern
+
+import sys
+
+class Window:
+    def exit(self):
+        sys.exit(0)
+
+class Document:
+    def __init__(self, filename):
+        self.filename = filename
+        self.contents = 'This file cannot be modified'
+    
+    def save(self):
+        with open(self.filename, 'w') as file:
+            file.write(self.contents)
+
+class ToolbarButton:
+    def __init__(self, name, iconname):
+        self.name = name
+        self.iconname = iconname
+    
+    def click(self):
+        self.command.execute()
+
+class MenuItem:
+    def __init__(self, menu_name, menuitem_name):
+        self.menu = menu_name
+        self.item = menuitem_name
+    
+    def click(self):
+        self.command.execute()
+
+class KeyboardShortcut:
+    def __init__(self, key, modifier):
+        self.key = key
+        self.modifier = modifier
+    
+    def keypress(self):
+        self.command.execute()
+
+class SaveCommand:
+    def __init__(self, document):
+        self.document = document
+    
+    def execute(self):
+        self.document.save()
+
+class ExitCommand:
+    def __init__(self, window):
+        self.window = window
+    
+    def execute(self):
+        self.window.exit()
+
+window = Window()
+document = Document("a_document.txt")
+save = SaveCommand(document)
+leave = ExitCommand(window)
+
+save_button = ToolbarButton('save', 'save.png')
+save_button.command = save
+save_keystroke = KeyboardShortcut("s", "ctrl")
+save_keystroke.command = save
+exit_menu = MenuItem("File", "Exit")
+exit_menu.command = leave
+
+import sys
+
+class Window:
+    def leave(self):
+        self.exit(0)
+
+class MenuItem:
+    def click(self):
+        self.command()
+
+window = Window()
+menu_item = MenuItem()
+menu_item.command = window.leave
+
+class Document:
+    def __init__(self, filename):
+        self.filename = filename
+        self.contents = 'This file cannot be modified'
+    
+    def save(self):
+        with open(self.filename, 'w') as file:
+            file.write(self.contents)
+
+class KeyboardShortcut:
+    def keypress(self):
+        self.command()
+
+class SaveCommand:
+    def __init__(self, document):
+        self.document = document
+    
+    def __call__(self):
+        self.document.save()
+
+document = Document("a_file.txt")
+shortcut = KeyboardShortcut()
+save_command = SaveCommand(document)
+shortcut.command = save_command
+
+# Abstract factory pattern
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
