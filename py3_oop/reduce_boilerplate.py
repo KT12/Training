@@ -15,19 +15,16 @@ class TestValidInputs(unittest.TestCase):
     
     def test_mean(self):
         self.assertEqual(self.stats.mean(), 2.5)
-        print(self.stats)
     
     def test_median(self):
         self.assertEqual(self.stats.median(), 2.5)
         self.stats.append(4)
-        self.assertEqual(self.stats.mode(), 3)
-        print(self.stats)
+        self.assertEqual(self.stats.median(), 3)
 
     def test_mode(self):
         self.assertEqual(self.stats.mode(), [2,3])
         self.stats.remove(2)
         self.assertEqual(self.stats.mode(), [3])
-        print(self.stats)
 
 if __name__ == '__main__':
     unittest.main()
