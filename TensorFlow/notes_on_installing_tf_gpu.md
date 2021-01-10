@@ -1,3 +1,11 @@
+## Follow instructions on [tensorflow.org](https://www.tensorflow.org/install/gpu#linux_setup)
+
+The instructions that are currently included with Linux setup worked well.  This was after several attempts to install CUDA 11 from NVIDIA's instructions.  Using instructions to remove prior libraries [here](https://medium.com/@praveenkrishna/downgrade-cuda-for-tensorflow-gpu-17831db59099) also helped.
+
+### Deprecated
+
+The notes below are deprecated.  Please follow the current setup directions on [tensorflow.org](https://www.tensorflow.org/install/gpu#linux_setup)
+
 ## Comments and tips on installing Tensorflow with GPU support
 
 The purpose of this document is to ease the building of Tensorflow from source for others and to have a document to fall back on in case I need to rebuild it again.  Both the TF and NVIDIA CUDA/cuDNN installs hit some bumps in the road.  I also deviated from the standard instructions in order to make things work.
